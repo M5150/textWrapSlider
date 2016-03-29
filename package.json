@@ -1,0 +1,11 @@
+{
+  "name": "text-wrap-slider",
+  "version": "1.0.0",
+  "description": "A widget that wraps text based upon a slider position",
+  "main": "index.jsx",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Maximo Cudich-Sieburger",
+  "license": "MIT"
+}
