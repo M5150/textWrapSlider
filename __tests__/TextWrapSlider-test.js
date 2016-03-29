@@ -1,5 +1,3 @@
-'use strict';
-
 jest.unmock('../TextWrapSlider');
 
 import React from 'react';
@@ -15,30 +13,31 @@ describe('TextWrapSlider', () => {
 
     const appNode = ReactDOM.findDOMNode(app);
     const textInputNode = TestUtils.findRenderedDOMComponentWithClass(app, 'textInput');
+    const rangeInputNode = TestUtils.findRenderedDOMComponentWithClass(app, 'rangeInput');
     textInputNode.value = 'asdfasdf';
-    TestUtils.Simulate.change(textInputNode);
-    const textOutputA = TestUtils.findRenderedDOMComponentWithClass(app, 'textOutputA');
+    rangeInputNode.value = 50;
 
-    expect(textOutputA.textContent).toEqual('asdfasdf');
+    TestUtils.Simulate.change(textInputNode);
+    TestUtils.Simulate.change(rangeInputNode);
+
+    expect(appNode.textContent).toEqual('a     s     d     f     a     s     d     f     ');
   });
 
   it('splits the text after slider input', () => {
     const app = TestUtils.renderIntoDocument(
       <TextWrapSlider />
     );
+    app.setState({
+      textInput: 'asdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasfasfd',
+      rangeInput: 50,
+      textOutput: [''],
+    }, app.wrapText);
 
     const appNode = ReactDOM.findDOMNode(app);
-    const textInputNode = TestUtils.findRenderedDOMComponentWithClass(app, 'textInput');
-    const rangeInputNode = TestUtils.findRenderedDOMComponentWithClass(app, 'rangeInput');
-    textInputNode.value = 'asdfasdf';
-    rangeInputNode.value = 50;
-    TestUtils.Simulate.change(textInputNode);
-    TestUtils.Simulate.change(rangeInputNode);
-    const textOutputA = TestUtils.findRenderedDOMComponentWithClass(app, 'textOutputA');
-    const textOutputB = TestUtils.findRenderedDOMComponentWithClass(app, 'textOutputB');
+    const textOutputNode = TestUtils.scryRenderedDOMComponentsWithClass(app, 'textOutput');
 
-    expect(textOutputA.textContent).toEqual('asdf');
-    expect(textOutputB.textContent).toEqual('asdf');
+    expect(app.state.textOutput[0]).toEqual('asdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfas');
+    expect(app.state.textOutput.length).toEqual(3);
   });
 
 });

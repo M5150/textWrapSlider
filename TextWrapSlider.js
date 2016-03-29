@@ -5,14 +5,13 @@ export default class TextWrapSlider extends Component {
     super();
     this.state = {
       textInput: '',
-      rangeInput: 1,
-      textOutputA: '',
-      textOutputB: '',
+      rangeInput: 100,
+      textOutput: [],
     };
   };
 
   handleRange (e) {
-    this.setState({ rangeInput: e.target.value / 100 }, this.wrapText);
+    this.setState({ rangeInput: Number(e.target.value) }, this.wrapText);
   };
 
   handleText (e) {
@@ -21,11 +20,29 @@ export default class TextWrapSlider extends Component {
 
   wrapText () {
     const { textInput, rangeInput } = this.state;
-    let wrapIndex = Math.round(rangeInput * textInput.length);
-    this.setState({
-      textOutputA: textInput.slice(0, wrapIndex),
-      textOutputB: textInput.slice(wrapIndex)
-    });
+    let result = [];
+    let buffer = '';
+    if (textInput.length < rangeInput) {
+      let spacing = Math.round((rangeInput - textInput.length) / textInput.length);
+      let spaces = rangeInput - textInput.length;
+      for (let i = 0; i < textInput.length; ++i) {
+        buffer += textInput[i];
+        for (let j = 0; j < spacing; ++j) {
+          if (spaces > 0) {
+            buffer = buffer + ' ';
+            --spaces;
+          }
+        }
+      }
+
+      result.push(buffer);
+    } else {
+      for (let k = 0; k < textInput.length; k += rangeInput) {
+        result.push(textInput.substr(k, rangeInput));
+      }
+    }
+
+    this.setState({ textOutput: result });
   };
 
   render () {
@@ -39,9 +56,16 @@ export default class TextWrapSlider extends Component {
         <input
           className = "rangeInput"
           type = "range"
+          min = "1"
+          max = "100"
           onChange = { this.handleRange.bind(this) }/>
-        <p className = "textOutputA">{ textOutputA }</p>
-        <p className = "textOutputB">{ textOutputB }</p>
+        <pre>
+          { this.state.textOutput.map((text, index) => {
+            return <p
+              className = "textOutput"
+              key = { index }>{ text }</p>;
+          }) }
+        </pre>
       </div>
     );
   };
