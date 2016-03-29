@@ -32,9 +32,16 @@ export default class TextWrapSlider extends Component {
     const { textOutputA, textOutputB } = this.state;
     return (
       <div>
-        <input type = "text" onChange = { this.handleText.bind(this) }></input>
-        <input type = "range" onChange = { this.handleRange.bind(this) }></input>
-        <div>{ textOutputA }<br/>{ textOutputB }</div>
+        <input
+          className = "textInput"
+          type = "text"
+          onChange = { this.handleText.bind(this) }/>
+        <input
+          className = "rangeInput"
+          type = "range"
+          onChange = { this.handleRange.bind(this) }/>
+        <p className = "textOutputA">{ textOutputA }</p>
+        <p className = "textOutputB">{ textOutputB }</p>
       </div>
     );
   };
